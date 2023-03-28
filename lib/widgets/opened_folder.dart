@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:folder_test/backend/service.dart';
 import 'package:folder_test/widgets/service_card.dart';
-import 'package:folder_test/widgets/service_widget.dart';
 
 class OpenedFolder extends StatefulWidget {
   const OpenedFolder({
     Key? key,
     required this.services,
   }) : super(key: key);
-  final List<ServiceWidget> services;
+  final List<Service> services;
 
   @override
   State<OpenedFolder> createState() => _OpenedFolderState();
@@ -24,10 +24,7 @@ class _OpenedFolderState extends State<OpenedFolder> {
         crossAxisCount: 3,
         shrinkWrap: true,
         children: widget.services
-            .map((service) => ServiceCard(
-                  title: service.title,
-                  icon: service.icon,
-                ))
+            .map((service) => ServiceCard(service: service))
             .toList(),
       ),
     );

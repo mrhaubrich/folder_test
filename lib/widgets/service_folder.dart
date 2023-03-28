@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:folder_test/backend/service.dart';
 import 'package:folder_test/widgets/colors.dart';
 import 'package:folder_test/widgets/opened_folder.dart';
 import 'package:folder_test/widgets/service_widget.dart';
@@ -8,13 +9,10 @@ import 'package:folder_test/widgets/service_widget.dart';
 class ServiceFolder extends StatefulWidget {
   const ServiceFolder({
     Key? key,
-    required this.services,
-    required this.title,
+    required this.service,
   }) : super(key: key);
 
-  final List<ServiceWidget> services;
-
-  final String title;
+  final Service service;
 
   @override
   State<ServiceFolder> createState() => _ServiceFolderState();
@@ -36,7 +34,7 @@ class _ServiceFolderState extends State<ServiceFolder> {
             barrierLabel: 'Folder',
             pageBuilder: (context, animation, secondaryAnimation) {
               return Hero(
-                tag: 'folder',
+                tag: 'folder_${widget.service.title}',
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: AlertDialog(
@@ -51,7 +49,7 @@ class _ServiceFolderState extends State<ServiceFolder> {
                     shadowColor: Colors.black,
                     scrollable: true,
                     content: OpenedFolder(
-                      services: widget.services,
+                      services: widget.service.children,
                     ),
                   ),
                 ),
@@ -61,7 +59,7 @@ class _ServiceFolderState extends State<ServiceFolder> {
         );
       },
       child: Hero(
-        tag: 'folder',
+        tag: 'folder_${widget.service.title}',
         child: Card(
           // folder is a grid with max 2x2 cards
           child: Column(
@@ -70,18 +68,15 @@ class _ServiceFolderState extends State<ServiceFolder> {
                 child: GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
-                  children: widget.services
-                      .map(
-                        (service) => ServiceWidget(
-                          title: service.title,
-                          icon: service.icon,
-                          showTitle: false,
-                        ),
-                      )
+                  children: widget.service.children
+                      .map((service) => ServiceWidget(
+                            service: service,
+                            showTitle: false,
+                          ))
                       .toList(),
                 ),
               ),
-              Text(widget.title),
+              Text(widget.service.title ?? ''),
             ],
           ),
         ),
